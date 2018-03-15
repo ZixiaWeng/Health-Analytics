@@ -24,14 +24,9 @@ class Prediction:
         path = 'first_data/data/'
 
         for filename in os.listdir(path):
-            # df = pd.DataFrame() 
-            df = pd.read_csv(path+filename, header = None)
-            # print df
-            df.columns = ['time','a','b','c','d','label']
-            # print to_date(float(1521059843377)/1000.0)
-            df['time'] = df['time'].apply(lambda x: get_hours(to_date(float(x)/1000.0)))
-            # print df['time']
+            print filename
+            df = pd.read_csv(path+filename, names = ['time','a','b','c','d','label'])
             print df
-            # print df
-            # with open(path+filename) as csvfile:
-            #   line = f.readline()
+            df['time'] = df['time'].apply(lambda x: get_hours(to_date(float(x)/1000.0)))
+            print df
+
