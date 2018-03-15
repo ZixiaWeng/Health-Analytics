@@ -25,12 +25,12 @@ class Prediction:
 
         for filename in os.listdir(path):
             # df = pd.DataFrame() 
-            df = pd.read_csv(path+filename)
-            print df.columns
-            # df.columns = ['time','a','b','c','d','label']
+            df = pd.read_csv(path+filename, header=None)
+            # print df.columns
+            df.columns = ['time','a','b','c','d','label']
             # print df
             # print to_date(float(1521059843377)/1000.0)
-            df['time'].apply(lambda x: str(get_hours(to_date(float(x)/1000.0))))
+            # df['0'].apply(lambda x: str(get_hours(to_date(float(x)/1000.0))))
             print df
             # with open(path+filename) as csvfile:
             #   line = f.readline()
