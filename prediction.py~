@@ -29,7 +29,7 @@ class Prediction:
             # print df
             df.columns = ['time','a','b','c','d','label']
             # print to_date(float(1521059843377)/1000.0)
-            df['time'] = df['time'].apply(lambda x: get_hours(to_date(float(x)/1000.0)))
+            df = df['time'].apply(lambda x: get_hours(to_date(float(x)/1000.0)))
             # print df['time']
             print df
             # print df
