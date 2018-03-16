@@ -74,7 +74,8 @@ class Prediction:
         
         # Get first 1/10 data from all data
         lenth = len(df_final.index)
-        df_final = df_final.head(lenth/10)
+        print lenth, label,'-----------------------'
+        df_final = df_final.head(5000)
         # distributed datas averagily by 1/5 in all data
         # for i in range(lenth/10):
         #     if i%2 != 0:
@@ -109,10 +110,35 @@ class Prediction:
         # print type(df1), df1.shape
 
     # def get_fft(self):
+    #     self.myfft()
 
 
+    # def myfft(self, data):
+    #     sampling_rate = len(data)
+    #     print sampling_rate
+    #     fft_size = 16
+    #     # t = np.arange(0, 1.0, 1.0/sampling_rate)
+    #     t = np.arange(0, len(data), 1.0) 
+    #     print t.size
 
 
+    #     # x = np.sin(2*np.pi*156.25*t)  + 2*np.sin(2*np.pi*234.375*t)
+    #     x = data
+    #     # print x.size
+    #     xs = x[:fft_size]
+    #     xf = np.fft.rfft(xs)/fft_size
+    #     freqs = np.linspace(0, sampling_rate/2, fft_size/2+1)
+    #     xfp = 20*np.log10(np.clip(np.abs(xf), 1e-20, 1e100))
+    #     pl.figure(figsize=(8,4))
+    #     pl.subplot(211)
+    #     pl.plot(t[:fft_size], xs)
+    #     pl.xlabel(u"时间(秒)")
+    #     pl.title(u"时域波形和频谱")
+    #     pl.subplot(212)
+    #     pl.plot(freqs, xfp)
+    #     pl.xlabel(u"频率(Hz)")
+    #     pl.subplots_adjust(hspace=0.4)
+    #     pl.show()
 
 
 
