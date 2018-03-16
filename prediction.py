@@ -19,7 +19,7 @@ def get_hours(data):
 
 class Prediction:
     def __init__(self):
-        self.alldata = []
+        self.data = self.preprocess()
 
     def preprocess(self): 
         path = 'first_data/'
@@ -52,6 +52,7 @@ class Prediction:
             # print high_dim_data_complex
             final_data_frame_folder.append(high_dim_data_complex)
         final_data_frame = self.combine_data(final_data_frame_folder)
+        return final_data_frame
         # print len(final_data_frame)
 
     def merge_data(self, data_all, threshold):
@@ -104,14 +105,10 @@ class Prediction:
         result = pd.concat(final_data_frame_folder)
         print result.shape, result
         result.to_csv('preprocessed_data.csv', sep=',')
+        return result
         # print type(df1), df1.shape
-        # i = 0
-        # for dataFrame in final_data_frame_folder:
-        #     if i == 0:
-        #         i+=1
-        #     else:
-        #         print type(dataFrame), dataFrame.shape
-        #         df1.append(dataFrame)
+
+    # def get_fft(self):
 
 
 
