@@ -21,8 +21,8 @@ class Prediction:
     def __init__(self):
         self.alldata = {}
 
-    def preprocessing(self):
-        path = 'first_data/data/'
+    def preprocess(self):
+        path = 'first_data/data_lay/'
 
         for filename in os.listdir(path):
             # df = pd.DataFrame() 
@@ -106,4 +106,8 @@ class Prediction:
         pl.subplots_adjust(hspace=0.4)
         pl.show()
 
+if __name__ == '__main__':
+    p = Prediction()
+    p.preprocess()
 
+  
