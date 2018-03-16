@@ -28,29 +28,16 @@ class Logistic_Regression:
     # -------------------------------------------------------------------
     def main(self, args):
 
-        X_acc = self.ft_acc.ix[:, 1:6]
-        X_mag = self.ft_mag.ix[:, 1:6]
-        X_ori = self.ft_ori.ix[:, 1:6]
-        X_gro = self.ft_gro.ix[:, 1:6]
-        X_grav = self.ft_grav.ix[:, 1:6]
-        X_ft_acceleration = self.ft_acceleration.ix[:,1:6]
-        X_rot = self.ft_rot.ix[:,1:8]
-        Xs = [X_acc, X_mag, X_ori, X_gro, X_grav, X_ft_acceleration, X_rot]
 
-        # X_less = self.ft
+        X_less = self.ft_ori.ix[:, 1:3]
+        X_more = self.ft_ori.ix[:, 1:6]
+        Xs = [X_less, X_more]
 
-        Y_acc = self.ft_acc.ix[:, 7]
-        Y_mag = self.ft_mag.ix[:, 7]
-        Y_ori = self.ft_ori.ix[:, 7]
-        Y_gro = self.ft_gro.ix[:, 7]
-        Y_grav = self.ft_grav.ix[:, 7]
-        Y_ft_acceleration = self.ft_acceleration.ix[:,7]
-        Y_rot = self.ft_rot.ix[:,9]
-        Ys = [Y_acc, Y_mag, Y_ori, Y_gro, Y_grav, Y_ft_acceleration, Y_rot]
+        labels = self.ft_ori.ix[:, 7]
 
-        names = ['accelerometer', 'magnetic','orientation','gyroscope','gravity','acceleration','rotation']
+        names = ['original features', 'advanced features']
 
-        heldout = [0.95, 0.90, 0.75, 0.50, 0.01]
+        heldout = [0.95, 0.90, 0.75, 0.01]
         rounds = 20
 
 
@@ -61,14 +48,13 @@ class Logistic_Regression:
 
 
         xx = 1. - np.array(heldout)
-        for index in range(7):
+        for index in range(2):
             print("training "+ names[index])
             rng = np.random.RandomState(42)
             yy = []
             for ho in heldout:
                 yy_ = []
 
-                labels = Ys[index]
                 Y = []
                 for i in range(len(labels)):
                     if labels[i] == 'sitting':

@@ -78,16 +78,12 @@ class Preprocess:
         df_final = data_all[0]
         df_final = df_final.drop(['label', 'type'], axis=1)
         for i in range(len(data_all)):
-            if i != 0 and i != len(data_all)-1:
+            if i != 0:
                 df_new = data_all[i]
                 df_new = df_new.drop(['label', 'type'], axis=1)
                 # if you want to keep the values that are matched in time during the mergy, delete how = "left"
                 df_final = pd.merge(df_final, df_new, on="time")
                 # df_final_witout_nan = pd.merge(df_final, how="left" df_new, on="time")
-            elif i == len(data_all)-1:
-                df_new = data_all[i]
-                df_new = df_new.drop(['type', 'label'], axis=1)
-                df_final = pd.merge(df_final, df_new, on="time") 
     
         # Get first 1/10 data from all data
         lenth = len(df_final.index)
@@ -102,6 +98,10 @@ class Preprocess:
         return df_final, label
 
     def expand_dim(self, high_dim_data, label):
+        temp_data = high_dim_data
+        # for i in range(9):
+            
+        print temp_data,'dsadas'
         new_dim_data = pd.DataFrame(columns = range(16))
         for i in range(len(high_dim_data.index)):
             if i == 0:
@@ -122,17 +122,12 @@ class Preprocess:
 
     def combine_data(self, final_data_frame_folder):
         result = pd.concat(final_data_frame_folder)
-        print result.shape, result
+        # print result.shape, result
         result = result.drop(result.columns[[0]], axis=1)
         result.to_csv('preprocessed_data.csv', sep=',')
         return result
 
-    def build_fft(self):
-        data = self.data
-        self.myfft(data)
-
-
-    def myfft(self, data):
+    def build_fft(self, data):
         sampling_rate = len(data)
         print sampling_rate
         fft_size = 16
