@@ -8,7 +8,14 @@ import datetime
 import time
 import pytz
 import math
-
+# Possible data will be used
+# 1_android.sensor.accelerometer.data.csv
+# 9_android.sensor.gravity.data.csv
+# 11_android.sensor.rotation_vector.data.csv
+# 2_android.sensor.magnetic_field.data.csv
+# 3_android.sensor.orientation.data.csv
+# 4_android.sensor.gyroscope.data.csv
+# 10_android.sensor.linear_acceleration.data.csv
 
 def to_date(timestamp):
     pst_tz = pytz.timezone('US/Pacific')
@@ -37,13 +44,18 @@ class Preprocess:
             
             for filename in os.listdir(path+subdir):
                 print filename
-                df = pd.read_csv(path+subdir+'/'+filename, header = None)
-                df.columns = df.columns.astype(str)
-                df.columns.values[0] = 'time'
-                df.columns.values[-1] = 'label'
-                df.columns.values[-2] = 'type'
-                # df['time'] = df['time'].apply(lambda x: to_date(float(x)/1000.0))
-                data_all.append(df)
+                # Ignore the unnecessary features
+                if filename == '11_android.sensor.rotation_vector.data.csv':
+                    pass
+                elif filename == '2_android.sensor.magnetic_field.data.csv':
+                    pass
+                else:
+                    df = pd.read_csv(path+subdir+'/'+filename, header = None)
+                    df.columns = df.columns.astype(str)
+                    df.columns.values[0] = 'time'
+                    df.columns.values[-1] = 'label'
+                    df.columns.values[-2] = 'type'
+                    data_all.append(df)
             
             print len(data_all), 'length of all data in one subdriectory'
             data_dir.append(data_all)
@@ -58,7 +70,7 @@ class Preprocess:
             # print high_dim_data_complex
             final_data_frame_folder.append(high_dim_data_complex)
         final_data_frame = self.combine_data(final_data_frame_folder)
-        return final_data_frame
+        return final_data_frame, final_data_frame.shape
 
     def merge_data(self, data_all, index):
         label = data_all[0]['label'][0]
@@ -81,6 +93,7 @@ class Preprocess:
         lenth = len(df_final.index)
         print lenth, label,'-----------------------'
         df_final = df_final.head(5000)
+
         # distributed datas averagily by 1/5 in all data
         # for i in range(lenth/10):
         #     if i%2 != 0:
@@ -89,7 +102,7 @@ class Preprocess:
         return df_final, label
 
     def expand_dim(self, high_dim_data, label):
-        new_dim_data = pd.DataFrame(columns = range(24))
+        new_dim_data = pd.DataFrame(columns = range(16))
         for i in range(len(high_dim_data.index)):
             if i == 0:
                 iterator = np.array(high_dim_data.iloc[0])
@@ -113,7 +126,6 @@ class Preprocess:
         result = result.drop(result.columns[[0]], axis=1)
         result.to_csv('preprocessed_data.csv', sep=',')
         return result
-        # print type(df1), df1.shape
 
     def build_fft(self):
         data = self.data
@@ -132,7 +144,7 @@ class Preprocess:
         # print x.size
         xs = x[:fft_size]
         xf = np.fft.rfft(xs)/fft_size
-        
+
         freqs = np.linspace(0, sampling_rate/2, fft_size/2+1)
         xfp = 20*np.log10(np.clip(np.abs(xf), 1e-20, 1e100))
 
