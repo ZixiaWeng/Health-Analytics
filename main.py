@@ -1,7 +1,7 @@
-from prediction import Prediction
+from prediction import Preprocess
 
 if __name__ == '__main__':
-    p = Prediction()
-    p.preprocess()
+    p = Preprocess()
+    # p.build_fft()
 
   
