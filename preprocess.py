@@ -30,7 +30,7 @@ class Preprocess:
         self.num = 2
 
     def preprocess(self): 
-        path = 'first_data/'
+        path = 'train_data/'
         dire = [dI for dI in os.listdir(path) if os.path.isdir(os.path.join(path,dI))]
         data_all = []
         data_dir = []
@@ -45,9 +45,9 @@ class Preprocess:
             for filename in os.listdir(path+subdir):
                 print filename
                 # Ignore the unnecessary features
-                if filename == '11_android.sensor.rotation_vector.data.csv':
+                if filename == '4_android.sensor.gyroscope.data.csv':
                     pass
-                elif filename == '2_android.sensor.magnetic_field.data.csv':
+                elif filename == '10_android.sensor.linear_acceleration.data.csv':
                     pass
                 else:
                     df = pd.read_csv(path+subdir+'/'+filename, header = None)
@@ -61,7 +61,7 @@ class Preprocess:
             data_dir.append(data_all)
 
         print 'how many data folder in training data:',len(data_dir)
-        
+        print 'According to the feedback of finding base sensor, we exclude gyroscope and linear acceleration out of the preprocessing process.'
         high_dim_data = pd.DataFrame()
 
         for data in data_dir:
@@ -100,9 +100,8 @@ class Preprocess:
     def expand_dim(self, high_dim_data, label):
         temp_data = high_dim_data
         # for i in range(9):
-            
-        print temp_data,'dsadas'
-        new_dim_data = pd.DataFrame(columns = range(16))
+
+        new_dim_data = pd.DataFrame(columns = range(18))
         for i in range(len(high_dim_data.index)):
             if i == 0:
                 iterator = np.array(high_dim_data.iloc[0])
@@ -117,26 +116,21 @@ class Preprocess:
                 iterator = np.array(high_dim_data.iloc[i])
         combined_data = pd.concat([high_dim_data[:-1], new_dim_data], axis=1, join_axes=[high_dim_data[:-1].index])
         combined_data = combined_data.reset_index(drop=True)
-        # print combined_data
         return combined_data
 
     def combine_data(self, final_data_frame_folder):
         result = pd.concat(final_data_frame_folder)
-        # print result.shape, result
+        print result.shape
         result = result.drop(result.columns[[0]], axis=1)
         result.to_csv('preprocessed_data.csv', sep=',')
         return result
 
     def build_fft(self, data):
         sampling_rate = len(data)
-        print sampling_rate
         fft_size = 16
-        # t = np.arange(0, 1.0, 1.0/sampling_rate)
         t = np.arange(0, len(data), 1.0) 
-        print t.size
-        # x = np.sin(2*np.pi*156.25*t)  + 2*np.sin(2*np.pi*234.375*t)
+        print 'Sample rate and T size:', sampling_rate, t.size
         x = data
-        # print x.size
         xs = x[:fft_size]
         xf = np.fft.rfft(xs)/fft_size
 
@@ -146,11 +140,11 @@ class Preprocess:
         pl.figure(figsize=(8,4))
         pl.subplot(211)
         pl.plot(t[:fft_size], xs)
-        pl.xlabel(u"时间(秒)")
-        pl.title(u"时域波形和频谱")
+        pl.xlabel(u"time(s)")
+        pl.title(u"time domain waive form and frequency spectrum")
         pl.subplot(212)
         pl.plot(freqs, xfp)
-        pl.xlabel(u"频率(Hz)")
+        pl.xlabel(u"(Hz)")
         pl.subplots_adjust(hspace=0.4)
         pl.show()
 
